@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Card } from 'react-native-elements';
 import { useFinancial } from './context/FinancialContext';
 import { calculateNetAssetGoal } from './utils/calculations';
+import { LineChart } from "react-native-chart-kit";
+import { Dimensions } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [isEditing, setIsEditing] = useState(true);
-  const { calculateCashflow, calculateNetWorth } = useFinancial();  // Add calculateNetWorth
+  const { calculateCashflow, calculateNetWorth, isLoading } = useFinancial();  // Add calculateNetWorth
 
   const netWorth = calculateNetWorth();
   const netAssetGoal = age ? calculateNetAssetGoal(age) : 0;
@@ -26,6 +28,45 @@ const HomeScreen = ({ navigation }) => {
     { title: 'Assets', color: '#3498DB' },
     { title: 'Liabilities', color: '#E67E22' },
   ];
+
+  // Modify getMonthlyData to prepare data chronologically
+  const getMonthlyData = () => {
+    const monthsData = useFinancial().getLatest12MonthsData();
+    return {
+      labels: monthsData.map(d => {
+        const date = new Date(d.year, d.month - 1);
+        return date.toLocaleString('default', { month: 'short' });
+      }),
+      data: monthsData
+    };
+  };
+
+  const monthlyData = getMonthlyData();
+  
+  const chartConfig = {
+    backgroundColor: "#ffffff",
+    backgroundGradientFrom: "#ffffff",
+    backgroundGradientTo: "#ffffff",
+    decimalPlaces: 0,
+    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    style: {
+      borderRadius: 16
+    },
+    propsForDots: {
+      r: "4",
+      strokeWidth: "2",
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={[styles.container, styles.centerContent]}>
+        <ActivityIndicator size="large" color="#2C3E50" />
+        <Text style={styles.loadingText}>Loading your data...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -90,6 +131,53 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </Card>
       </View>
+
+      {/* Chart Section */}
+      <Card containerStyle={styles.chartCard}>
+        <Text style={styles.chartTitle}>Monthly Overview</Text>
+        <LineChart
+          data={{
+            labels: monthlyData.labels,
+            datasets: [
+              {
+                data: monthlyData.data.map(d => d.netAsset),
+                color: (opacity = 1) => `rgba(52, 152, 219, ${opacity})`, // Bright blue
+                strokeWidth: 2,
+                withDots: true,
+                withShadow: false,
+                backgroundColor: 'rgba(52, 152, 219, 0.2)', // Light blue background
+              },
+              {
+                data: monthlyData.data.map(d => d.cashflow),
+                color: (opacity = 1) => `rgba(155, 89, 182, ${opacity})`, // Purple
+                strokeWidth: 2,
+                withDots: true,
+                withShadow: false,
+                backgroundColor: 'rgba(155, 89, 182, 0.2)', // Light purple background
+              }
+            ],
+            legend: ["Net Assets", "Cashflow"]
+          }}
+          width={Dimensions.get("window").width - 40}
+          height={220}
+          chartConfig={chartConfig}
+          bezier
+          style={{
+            marginVertical: 8,
+            borderRadius: 16
+          }}
+          withVerticalLines={false}
+          withHorizontalLines={true}
+          withInnerLines={false}
+          fromZero={true}
+        />
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => navigation.navigate('EditTimeSeries')}
+        >
+          <Text style={styles.editButtonText}>Edit Time Series Data</Text>
+        </TouchableOpacity>
+      </Card>
 
       <Card containerStyle={styles.goalCard}>
         <Text style={styles.goalLabel}>Net Asset Goals</Text>
@@ -253,6 +341,40 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#2C3E50',
+  },
+  chartCard: {
+    borderRadius: 10,
+    margin: 10,
+    elevation: 3,
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2C3E50',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  editButton: {
+    backgroundColor: '#3498DB',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  editButtonText: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    color: '#2C3E50',
+    fontSize: 16,
   },
 });
 

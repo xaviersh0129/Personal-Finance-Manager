@@ -8,6 +8,7 @@ import { FinancialProvider } from './app/context/FinancialContext';
 import ExpensesScreen from './app/screens/ExpensesScreen';
 import AssetsScreen from './app/screens/AssetsScreen';
 import LiabilitiesScreen from './app/screens/LiabilitiesScreen';
+import EditTimeSeriesScreen from './app/screens/EditTimeSeriesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +21,7 @@ export default function App() {
             name="Home" 
             component={HomeScreen}
             options={{
-              title: 'Cete',
+              title: 'Personal Finance Manager',
               headerStyle: {
                 backgroundColor: '#2C3E50',
               },
@@ -69,6 +70,11 @@ export default function App() {
               },
               headerTintColor: '#fff',
             }}
+          />
+          <Stack.Screen 
+            name="EditTimeSeries" 
+            component={EditTimeSeriesScreen}
+            options={{ title: 'Edit Time Series Data' }}
           />
         </Stack.Navigator>
         <StatusBar style="light" />
