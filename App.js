@@ -1,12 +1,79 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './app/HomeScreen';
+import IncomeScreen from './app/screens/IncomeScreen';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
+import { FinancialProvider } from './app/context/FinancialContext';
+import ExpensesScreen from './app/screens/ExpensesScreen';
+import AssetsScreen from './app/screens/AssetsScreen';
+import LiabilitiesScreen from './app/screens/LiabilitiesScreen';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <FinancialProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen 
+            name="Home" 
+            component={HomeScreen}
+            options={{
+              title: 'Cete',
+              headerStyle: {
+                backgroundColor: '#2C3E50',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Income"
+            component={IncomeScreen}
+            options={{
+              headerStyle: {
+                backgroundColor: '#2C3E50',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+          <Stack.Screen
+            name="Expenses"
+            component={ExpensesScreen}
+            options={{
+              headerStyle: {
+                backgroundColor: '#2C3E50',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+          <Stack.Screen
+            name="Assets"
+            component={AssetsScreen}
+            options={{
+              headerStyle: {
+                backgroundColor: '#2C3E50',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+          <Stack.Screen
+            name="Liabilities"
+            component={LiabilitiesScreen}
+            options={{
+              headerStyle: {
+                backgroundColor: '#2C3E50',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+        </Stack.Navigator>
+        <StatusBar style="light" />
+      </NavigationContainer>
+    </FinancialProvider>
   );
 }
 
