@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import { LineChart } from "react-native-chart-kit";
-import { useFinancial } from './context/FinancialContext';
-import { calculateNetAssetGoal } from './utils/calculations';
+import { useFinancial } from '../context/FinancialContext';
+import { calculateNetAssetGoal } from '../utils/calculations';
 
 const HomeScreen = ({ navigation }) => {
   const [name, setName] = useState('');

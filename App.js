@@ -1,14 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './app/HomeScreen';
-import IncomeScreen from './app/screens/IncomeScreen';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, Text } from 'react-native';
-import { FinancialProvider } from './app/context/FinancialContext';
-import ExpensesScreen from './app/screens/ExpensesScreen';
-import AssetsScreen from './app/screens/AssetsScreen';
-import LiabilitiesScreen from './app/screens/LiabilitiesScreen';
-import EditTimeSeriesScreen from './app/screens/EditTimeSeriesScreen';
+import { FinancialProvider } from './src/context/FinancialContext';
+import HomeScreen from './src/screens/HomeScreen';
+import IncomeScreen from './src/screens/IncomeScreen';
+import ExpensesScreen from './src/screens/ExpensesScreen';
+import AssetsScreen from './src/screens/AssetsScreen';
+import LiabilitiesScreen from './src/screens/LiabilitiesScreen';
+import EditTimeSeriesScreen from './src/screens/EditTimeSeriesScreen';
 
 const Stack = createNativeStackNavigator();
 
