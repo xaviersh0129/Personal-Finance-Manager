@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { Card } from 'react-native-elements';
 import { useFinancial } from '../context/FinancialContext';
 
 const EditTimeSeriesScreen = ({ navigation }) => {
@@ -63,7 +62,7 @@ const EditTimeSeriesScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Card containerStyle={styles.card}>
+      <View style={styles.card}>
         <Text style={styles.title}>Edit Monthly Financial Data</Text>
         
         <TouchableOpacity style={styles.addButton} onPress={addNewMonth}>
@@ -103,7 +102,7 @@ const EditTimeSeriesScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
         </TouchableOpacity>
-      </Card>
+      </View>
     </ScrollView>
   );
 };
@@ -119,6 +118,13 @@ const styles = StyleSheet.create({
     elevation: 3,
     backgroundColor: '#FFFFFF',
     padding: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   title: {
     fontSize: 20,

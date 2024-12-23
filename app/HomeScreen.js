@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Card } from 'react-native-elements';
+import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
+import { LineChart } from "react-native-chart-kit";
 import { useFinancial } from './context/FinancialContext';
 import { calculateNetAssetGoal } from './utils/calculations';
-import { LineChart } from "react-native-chart-kit";
-import { Dimensions } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -72,8 +70,8 @@ const HomeScreen = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <View style={styles.userProfileSection}>
         {isEditing ? (
-          <Card containerStyle={styles.formCard}>
-            <Card.Title>Your Profile</Card.Title>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Your Profile</Text>
             <TextInput
               style={styles.input}
               placeholder="Enter your name"
@@ -90,9 +88,9 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
-          </Card>
+          </View>
         ) : (
-          <Card containerStyle={styles.profileCard}>
+          <View style={styles.card}>
             <View style={styles.profileHeader}>
               <View>
                 <Text style={styles.profileName}>{name}</Text>
@@ -102,12 +100,12 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.editButton}>Edit</Text>
               </TouchableOpacity>
             </View>
-          </Card>
+          </View>
         )}
       </View>
 
       <View style={styles.financialSection}>
-        <Card containerStyle={styles.financialCard}>
+        <View style={[styles.card, styles.financialCard]}>
           <View style={styles.financialItem}>
             <Text style={styles.financialLabel}>Net Asset</Text>
             <Text style={[
@@ -117,9 +115,9 @@ const HomeScreen = ({ navigation }) => {
               ${calculateNetWorth().toLocaleString()}
             </Text>
           </View>
-        </Card>
+        </View>
 
-        <Card containerStyle={styles.financialCard}>
+        <View style={[styles.card, styles.financialCard]}>
           <View style={styles.financialItem}>
             <Text style={styles.financialLabel}>Cashflow</Text>
             <Text style={[
@@ -129,11 +127,11 @@ const HomeScreen = ({ navigation }) => {
               ${calculateCashflow().toLocaleString()}
             </Text>
           </View>
-        </Card>
+        </View>
       </View>
 
       {/* Chart Section */}
-      <Card containerStyle={styles.chartCard}>
+      <View style={[styles.card, styles.chartCard]}>
         <Text style={styles.chartTitle}>Monthly Overview</Text>
         <LineChart
           data={{
@@ -158,13 +156,15 @@ const HomeScreen = ({ navigation }) => {
             ],
             legend: ["Net Assets", "Cashflow"]
           }}
-          width={Dimensions.get("window").width - 40}
+          width={Dimensions.get("window").width - 30}
           height={220}
           chartConfig={chartConfig}
           bezier
           style={{
             marginVertical: 8,
-            borderRadius: 16
+            borderRadius: 16,
+            alignSelf: 'center',
+            marginLeft: -15,
           }}
           withVerticalLines={false}
           withHorizontalLines={true}
@@ -177,9 +177,9 @@ const HomeScreen = ({ navigation }) => {
         >
           <Text style={styles.editButtonText}>Edit Time Series Data</Text>
         </TouchableOpacity>
-      </Card>
+      </View>
 
-      <Card containerStyle={styles.goalCard}>
+      <View style={styles.card}>
         <Text style={styles.goalLabel}>Net Asset Goals</Text>
         <View style={styles.goalRow}>
           <Text style={styles.goalText}>Age Goal:</Text>
@@ -194,7 +194,7 @@ const HomeScreen = ({ navigation }) => {
             ${goalDifference.toLocaleString()}
           </Text>
         </View>
-      </Card>
+      </View>
 
       <View style={styles.navigationSection}>
         {navigationButtons.map((button, index) => (
@@ -269,17 +269,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   financialSection: {
-    padding: 10,
+    padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 0,
   },
   financialCard: {
-    borderRadius: 10,
     flex: 1,
     margin: 5,
-    elevation: 3,
-    backgroundColor: '#FFFFFF',
-    padding: 15,
+    padding: 10,
   },
   financialItem: {
     alignItems: 'center',
@@ -348,6 +346,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     backgroundColor: '#FFFFFF',
     padding: 15,
+    alignItems: 'center',
   },
   chartTitle: {
     fontSize: 18,
@@ -375,6 +374,27 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#2C3E50',
     fontSize: 16,
+  },
+  card: {
+    borderRadius: 10,
+    margin: 10,
+    elevation: 3,
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2C3E50',
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
 

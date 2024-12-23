@@ -19,16 +19,27 @@ const ListControls = ({
         placeholder="Search..."
         value={searchText}
         onChangeText={setSearchText}
+        placeholderTextColor="#999"
       />
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedCategory}
           onValueChange={setSelectedCategory}
           style={styles.picker}
+          itemStyle={styles.pickerItem}
         >
-          <Picker.Item label="All Categories" value="All" />
+          <Picker.Item 
+            label="All Categories" 
+            value="All" 
+            style={styles.pickerItem}  // Added style here
+          />
           {categories.map(cat => (
-            <Picker.Item key={cat} label={cat} value={cat} />
+            <Picker.Item 
+              key={cat} 
+              label={cat} 
+              value={cat}
+              style={styles.pickerItem}
+            />
           ))}
         </Picker>
       </View>
@@ -37,12 +48,14 @@ const ListControls = ({
           selectedValue={sortBy}
           onValueChange={setSortBy}
           style={styles.picker}
+          itemStyle={styles.pickerItem}
         >
           {sortOptions.map(option => (
             <Picker.Item 
               key={option.value} 
               label={option.label} 
-              value={option.value} 
+              value={option.value}
+              style={styles.pickerItem}
             />
           ))}
         </Picker>
@@ -53,7 +66,7 @@ const ListControls = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: 8,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
@@ -62,17 +75,30 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    marginBottom: 8,
+    fontSize: 12,
   },
   pickerContainer: {
     borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 5,
-    marginBottom: 10,
+    marginBottom: 8,
+    height: 50, // Increased height for better visibility
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
   },
   picker: {
-    height: 40,
+    height: 50, // Match container height
+    color: '#000000',
+    backgroundColor: '#FFFFFF',
+    fontSize: 14, // Consistent font size
+  },
+  pickerItem: {
+    fontSize: 14, // Consistent font size
+    color: '#000000',
+    height: 50, // Match container height
   },
 });
 

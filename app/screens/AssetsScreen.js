@@ -137,7 +137,13 @@ const AssetsScreen = () => {
               mode="dropdown"
             >
               {categories.map((cat) => (
-                <Picker.Item key={cat} label={cat} value={cat} color="#2C3E50" />
+                <Picker.Item 
+                  key={cat} 
+                  label={cat} 
+                  value={cat} 
+                  color="#2C3E50"
+                  style={{ fontSize: 13.5 }}  // Added style with smaller font size
+                />
               ))}
             </Picker>
           </View>

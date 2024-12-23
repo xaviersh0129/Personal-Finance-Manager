@@ -3,6 +3,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FinancialContext = createContext();
 
+const generatePast12MonthsData = () => {
+  const data = {};
+  const today = new Date();
+  for (let i = 11; i >= 0; i--) {
+    const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    const monthKey = date.toISOString().split('T')[0].substring(0, 7);
+    data[monthKey] = {
+      netAsset: 0,
+      cashflow: 0
+    };
+  }
+  return data;
+};
+
 export const FinancialProvider = ({ children }) => {
   const [incomeItems, setIncomeItems] = useState([]);
   const [expenseItems, setExpenseItems] = useState([]);
@@ -23,7 +37,11 @@ export const FinancialProvider = ({ children }) => {
           setExpenseItems(parsedData.expenseItems || []);
           setAssetItems(parsedData.assetItems || []);
           setLiabilityItems(parsedData.liabilityItems || []);
-          setMonthlyHistoricalData(parsedData.monthlyHistoricalData || {});
+          // Initialize with past 12 months if no historical data exists
+          setMonthlyHistoricalData(parsedData.monthlyHistoricalData || generatePast12MonthsData());
+        } else {
+          // If no data exists at all, initialize with defaults including past 12 months
+          setMonthlyHistoricalData(generatePast12MonthsData());
         }
       } catch (error) {
         console.error('Error loading data:', error);
@@ -116,12 +134,13 @@ export const FinancialProvider = ({ children }) => {
         netAsset: data.netAsset,
         cashflow: data.cashflow
       }))
-      .sort((a, b) => a.monthKey.localeCompare(b.monthKey)); // Changed sort order to ascending
+      .sort((a, b) => b.monthKey.localeCompare(a.monthKey)); // Keep descending order for table view
   };
 
   const getLatest12MonthsData = () => {
     const allData = getAllMonthlyData();
-    return allData.slice(-12); // Get last 12 items instead of first 12
+    // First slice to get last 12 months, then reverse to show oldest to newest for the plot
+    return allData.slice(0, 12).reverse();
   };
 
   return (
